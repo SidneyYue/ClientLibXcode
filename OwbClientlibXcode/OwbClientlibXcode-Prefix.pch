@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'OwbClientlibXcode' target in the 'OwbClientlibXcode' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif

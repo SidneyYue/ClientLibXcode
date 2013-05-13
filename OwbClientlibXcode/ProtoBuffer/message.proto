@@ -1,0 +1,142 @@
+message Operation {
+    //唯一编号,非负整数
+    required uint32 serial_number = 1;
+    
+    //操作的数据结构
+    message OperationData {
+        //操作数据的类型
+        enum OperationDataType {
+            LINE = 0;
+            ELLIPSE = 1;
+            RECTANGE = 2;
+            POINT = 3;
+            ERASER = 4;
+        }
+
+        //点的数据结构
+        message Point {
+            required int32 x = 1;
+            required int32 y = 2;
+        }
+
+        required OperationDataType data_type = 1;
+
+        //粗细
+        required int32 thinkness = 2;
+        
+        //颜色
+        optional int32 color = 3;
+
+        //对于直线
+        optional Point start_point = 4;
+        optional Point end_point = 5;
+
+        //对于椭圆
+        optional Point center = 6;
+        optional float angle = 7;
+        optional float a = 8;
+        optional float b = 9;
+        
+        //对于长方形
+        optional Point top_left_corner = 10;
+        optional Point bottom_right_corner = 11;
+
+        //对于点和橡皮
+        optional Point position = 12;
+        optional bool is_start = 15;
+
+        //对于椭圆和长方形
+        optional bool fill = 13;
+
+        //深浅
+        optional float alpha = 14;
+
+    }
+
+    required OperationData data = 2;
+}
+
+message Operations {
+    //operation是否有效
+    enum OperationAvaliable {
+        NOT_AVALIABLE = 1;
+        LOAD_DOCUMENT = 2;
+        AVALIBLE = 3;
+    }
+    required OperationAvaliable operation_avaliable = 1;
+    repeated Operation operations = 2;
+}
+
+message Document {
+    //唯一编号,非负整数
+    required uint32 serial_number = 1;
+    //文档镜像
+    required bytes data = 2;
+    //當前會議主持人
+    optional string user_name = 3;
+}
+
+message DocumentList {
+    repeated Document history_document = 1;
+}
+
+
+//用戶身份
+enum Identity {
+    //會議主持人
+    HOST = 1;
+    //主持人候選者
+    CANDIDATE = 2;
+    //會議參與者
+    PARTICIPANTS = 3;
+}
+
+message MeetingServerInfo {
+    //端口號
+    required int32 port = 1;
+    //服務器ip
+    required string server_ip = 2;
+}
+
+enum JoinState {
+    //成功
+    SUCCESS = 1;
+    //加入失败
+    FAIL = 2;
+    //没有创建该会议
+    NOTAVAILABLE = 3;
+    //会议已死
+    DEAD = 4;
+}
+
+message JoinMeetingReturn {
+    //操作状态
+    required JoinState join_state = 1;
+    //服务器状态
+    optional MeetingServerInfo server_info = 2;
+}
+
+message User {
+    //用戶名
+    required string user_name = 1;
+    //用戶密碼
+    optional string password = 2;
+    //用戶身份
+    optional Identity identity = 3;
+}
+
+message HeartBeatSendPackage {
+    //用戶名
+    required string user_name = 1;
+    //會議名
+    required string meeting_id = 2;
+}
+
+message HeartReturnPackage {
+    //用戶狀態
+    required Identity identity = 1;
+}
+
+message UserList {
+    repeated User users = 1;
+}
